@@ -12,10 +12,7 @@ connectDB();
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
-const whitelist = [
-  'https://partyblind-api.onrender.com',
-  'http://localhost:3000',
-];
+const whitelist = ['https://partyblind.onrender.com', 'http://localhost:3000'];
 
 const corsOptions = {
   origin: function (origin, callback) {
