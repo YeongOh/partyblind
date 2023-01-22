@@ -8,6 +8,7 @@ const connectDB = async () => {
       useUnifiedTopology: true,
       useNewUrlParser: true,
     });
+    console.log(process.env.DATABASE_URI);
   } catch (error) {
     console.error(error);
   }
