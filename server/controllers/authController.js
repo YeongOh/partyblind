@@ -8,8 +8,6 @@ const login = async (req, res) => {
   // TODO: add exp_date key in refreshTokens in DB,
   // at login clear up the expired refresh tokens
 
-  console.log(`cookie available at login: ${JSON.stringify(cookies)}`);
-
   const { username, password } = req.body;
 
   if (!username || !password)
@@ -87,7 +85,6 @@ const login = async (req, res) => {
       maxAge: 24 * 60 * 10 * 1000, // 1 day
     });
 
-    console.log(result);
     // Send access token in json
     return res.status(200).json({ username, accessToken });
   } else {

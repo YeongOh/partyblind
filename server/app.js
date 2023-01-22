@@ -11,7 +11,24 @@ connectDB();
 
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
-app.use(cors({ credentials: true, origin: true }));
+
+const whitelist = [
+  'https://partyblind-api.onrender.com',
+  'http://localhost:3000',
+];
+
+const corsOptions = {
+  origin: function (origin, callback) {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 app.use(cookieParser());
 
 app.use('/auth', require('./routers/auth'));

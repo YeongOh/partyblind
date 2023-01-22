@@ -84,8 +84,6 @@ const deletePost = async (req, res) => {
       return res.sendStatus(403); // invalid token
     }
     match = post.username === decoded.UserInfo.username;
-    console.log(post.username);
-    console.log(decoded.UserInfo.username);
   });
   if (!match)
     return res.status(401).json({ message: 'username does not match.' });
