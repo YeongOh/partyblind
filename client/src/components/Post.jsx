@@ -24,9 +24,11 @@ export default function Post({ post }) {
       <div className='flex justify-between items-center text-sm text-gray-500'>
         <div className='font-semibold'>
           <span>{username}</span>
-          <span className='ml-2 text-red-500'>
-            <FontAwesomeIcon icon={faThumbsUp} /> {numberOfLikes || 0}
-          </span>
+          {numberOfLikes > 0 && (
+            <span className='ml-2 text-red-500'>
+              <FontAwesomeIcon icon={faThumbsUp} /> {numberOfLikes}
+            </span>
+          )}
           {comments.length !== 0 && (
             <span className='ml-2 text-gray-600'>
               <FontAwesomeIcon icon={faComment} /> {comments.length}
