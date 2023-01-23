@@ -15,7 +15,6 @@ export default function Posts() {
         const response = await axios.get('/post');
         setIsLoading(false);
         setPosts(response.data);
-        console.log('fetcheed');
       } catch (error) {
         if (!error?.response) {
           setError('No Server Response');
@@ -30,7 +29,7 @@ export default function Posts() {
   }, []);
 
   return (
-    <section className='max-w-8xl mx-auto w-2/3 mt-12'>
+    <section className='max-w-8xl mt-12 mx-auto sm:w-full md:w-4/5 lg:w-3/4 xl:w-2/3'>
       {error && (
         <h1 className='text-red-500 text-xl font-semibold mb-8 text-center'>{`${error}`}</h1>
       )}
@@ -39,7 +38,7 @@ export default function Posts() {
           Loading Posts...
         </h1>
       )}
-      <ul className='grid grid-cols-2'>
+      <ul className='grid sm:grid-cols-1 md:grid-cols-2 gap-2'>
         {posts && posts.map((post) => <Post key={post.id} post={post} />)}
       </ul>
     </section>

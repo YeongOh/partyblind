@@ -6,7 +6,7 @@ import useAuth from '../hooks/useAuth';
 import React from 'react';
 
 export default function PersistAuth() {
-  const [isLoading, setIsLoading] = useState(true);
+  // const [isLoading, setIsLoading] = useState(false);
   const refresh = useRefreshToken();
   const { auth, persist } = useAuth();
 
@@ -19,21 +19,15 @@ export default function PersistAuth() {
         // get a new access token
         await refresh();
       } catch (error) {
-        console.error(error);
-      } finally {
-        setIsLoading(false);
+        console.error('You are not logged in.');
       }
     };
     // if persist login is set to false, do not refresh login
-    if (!persist) {
-      setIsLoading(false);
-      return;
-    }
+    if (!persist) return;
 
     if (!effectRan.current) {
       // on refresh a page, memory containing auth info is gone
-      console.log('ran');
-      !auth?.accessToken ? verifyRefreshToken() : setIsLoading(false);
+      if (!auth?.accessToken) verifyRefreshToken();
 
       return () => {
         effectRan.current = true;
@@ -41,19 +35,9 @@ export default function PersistAuth() {
     }
   }, []);
 
-  useEffect(() => {}, [isLoading]);
-
   return (
     <>
-      {isLoading ? (
-        <section className='max-w-8xl mx-auto w-2/3 mt-12'>
-          <p className='text-gray-800 text-xl font-semibold mb-8 text-center'>
-            Relogging in...
-          </p>
-        </section>
-      ) : (
-        <Outlet />
-      )}
+      <Outlet />
     </>
   );
 }

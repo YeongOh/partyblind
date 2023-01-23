@@ -23,6 +23,7 @@ const createPost = async (req, res) => {
       text,
       createdAt,
       username,
+      numberOfLikes: 0,
     });
     return res.status(201).json(post);
   } catch (error) {
@@ -105,10 +106,75 @@ const getPost = async (req, res) => {
   }
 };
 
+const likePost = async (req, res) => {
+  if (!req?.params?.id)
+    return res.status(400).json({ message: 'id parameter is required' });
+
+  const id = req.params.id;
+  const post = await Post.findOne({ id }).exec();
+
+  const username = req.body.username;
+  const match = post.likedUsernames?.find((element) => element === username);
+
+  if (match)
+    return res.status(401).json({ message: `user already liked this post.` });
+
+  // if the post does not have numberOfLikes property - post was created before implementing like
+  if (!post.numberOfLikes) post.numberOfLikes = 0;
+
+  post.numberOfLikes++;
+
+  post.likedUsernames.push(username);
+  const result = await post.save();
+  if (post) {
+    return res.status(200).json(post.numberOfLikes);
+  }
+  return res.status(404).json({ message: `Post ${id} not found` });
+};
+
+const commentPost = async (req, res) => {
+  if (!req?.params?.id)
+    return res.status(401).json({ message: 'Invalid attempt' });
+
+  if (!req?.body?.text || !req?.body?.username)
+    return res.status(401).json({ message: 'Invalid attempt' });
+
+  if (req.body.text.length > 100)
+    return res
+      .status(400)
+      .json({ message: 'Please comment less than 100 words!' });
+
+  const id = req.params.id;
+  const post = await Post.findOne({ id }).exec();
+  const username = req.body.username;
+  const text = req.body.text;
+  const commentTime = new Date().getTime();
+
+  const newComment = {
+    commentUsername: username,
+    commentText: text,
+    commentTime,
+  };
+
+  if (!post.comments) {
+    post.comments = [];
+  }
+
+  post.comments.push(newComment);
+  const result = await post.save();
+
+  if (post) {
+    return res.status(200).json(newComment);
+  }
+  return res.status(404).json({ message: `Post ${id} not found` });
+};
+
 module.exports = {
   getAllPosts,
   createPost,
   updatePost,
   deletePost,
   getPost,
+  likePost,
+  commentPost,
 };

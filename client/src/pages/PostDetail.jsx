@@ -6,15 +6,20 @@ import ReactTimeAgo from 'react-time-ago';
 import { faArrowLeft, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useAuth from '../hooks/useAuth';
+import PostDetailLike from '../components/PostDetailLike';
+import PostDetailComment from '../components/PostDetailComment';
 
 const EDIT_URL = '/post/';
 const DELETE_URL = '/post/';
 
 export default function PostDetail() {
-  const {
-    state: { post },
-  } = useLocation();
-  const { id, title, username, createdAt, text } = post;
+  // null check - if the user refreshes a page, or directly writes a link
+  const { state } = useLocation();
+  const { post } = state || {};
+
+  const { id, title, username, createdAt, text, numberOfLikes, comments } =
+    post || {};
+
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
   const [newPost, setNewPost] = useState({ title, text });
@@ -79,7 +84,7 @@ export default function PostDetail() {
       );
       setIsEditing(false);
       const post = response?.data;
-      navigate(`/post/${post.id}`, { state: { post } });
+      navigate(`/post/${post.id}`, { state: { post } }); // not needed
     } catch (error) {
       if (!error?.response) {
         setError('No Server Response');
@@ -99,40 +104,49 @@ export default function PostDetail() {
         </p>
       )}
       {!isEditing && (
-        <section className='relative w-1/2 mx-auto mt-12 p-2 text-gray-700'>
-          <h1 className='text-2xl my-5 whitespace-pre-wrap truncate'>
-            {title}
-          </h1>
-          <div className='border-b p-2 flex justify-between items-center text-sm text-gray-500 opacity-60'>
-            <p>{username}</p>
-            <ReactTimeAgo date={createdAt} locale='en-US' />
-          </div>
-          <p className='my-12 whitespace-pre-wrap truncate'>{text}</p>
-          <div className='border-b mt-40'>
-            <button
-              className='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 w-full border border-gray-400 rounded shadow w-20 absolute mt-8'
-              onClick={() => navigate('/')}
-            >
-              <FontAwesomeIcon icon={faArrowLeft} />
-            </button>
-            {auth?.username === username && (
-              <div className='absolute right-2 mt-8'>
-                <button
-                  className='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 w-full border border-gray-400 rounded shadow w-20'
-                  onClick={() => setIsEditing(true)}
-                >
-                  Edit
-                </button>
-                <button
-                  className='ml-2 bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 w-full border border-gray-400 rounded shadow w-20'
-                  onClick={handleDelete}
-                >
-                  Delete
-                </button>
-              </div>
-            )}
-          </div>
-        </section>
+        <>
+          <section className='relative mx-auto mt-12 p-2 text-gray-700 sm:w-full md:w-2/3 lg:w-3/5 xl:w-1/2'>
+            <h1 className='text-2xl my-5 whitespace-pre-wrap truncate'>
+              {title}
+            </h1>
+            <div className='border-b p-2 flex justify-between items-center text-md text-gray-500'>
+              <span className='font-semibold'>{username}</span>
+              <ReactTimeAgo date={createdAt} locale='en-US' />
+            </div>
+            <p className='my-12 whitespace-pre-wrap truncate'>{text}</p>
+            <PostDetailLike postId={id} numberOfLikes={numberOfLikes} />
+            <div className='border-b mt-20'>
+              <button
+                type='button'
+                className='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 border border-gray-400 rounded shadow w-24 text-xs absolute mt-4'
+                onClick={() => navigate('/')}
+              >
+                <FontAwesomeIcon icon={faArrowLeft} />
+              </button>
+              {auth?.username === username && (
+                <div className='absolute right-2 mt-4'>
+                  <button
+                    className='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 border border-gray-400 rounded shadow w-24 text-xs'
+                    onClick={() => setIsEditing(true)}
+                  >
+                    EDIT
+                  </button>
+                  <button
+                    className='ml-4 bg-gray-200 hover:bg-red-400 hover:text-white text-gray-800 font-semibold py-2 w-24 border border-gray-400 rounded shadow text-xs'
+                    onClick={handleDelete}
+                  >
+                    DELETE
+                  </button>
+                </div>
+              )}
+            </div>
+          </section>
+          <PostDetailComment
+            postUsername={username}
+            comments={comments}
+            postId={id}
+          />
+        </>
       )}
 
       {isEditing && (

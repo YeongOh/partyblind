@@ -25,6 +25,7 @@ export default function Login() {
     userRef.current.focus();
 
     if (!localStorage.getItem('login_trust')) setPersist(true);
+    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -35,6 +36,7 @@ export default function Login() {
     if (auth?.accessToken) {
       navigate(from, { replace: true });
     }
+    // eslint-disable-next-line
   }, [auth]);
 
   const togglePersist = () => {

@@ -23,6 +23,24 @@ const postSchema = new Schema({
     type: String,
     required: true,
   },
+  comments: [
+    {
+      commentUsername: {
+        type: String,
+      },
+      commentText: {
+        type: String,
+      },
+      commentTime: {
+        type: Number,
+        required: true,
+      },
+    },
+  ],
+  numberOfLikes: {
+    type: Number,
+  },
+  likedUsernames: [String],
 });
 
 // User becomes users collection in the database

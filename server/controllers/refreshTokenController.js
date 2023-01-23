@@ -32,7 +32,6 @@ const handleRefreshToken = async (req, res) => {
         }).exec();
         hackedUser.refreshToken = [];
         const result = await hackedUser.save();
-        console.log(result);
         console.log(
           `detected refresh token reuse - deleting all refresh tokens of ${decoded.username}`
         );
@@ -53,12 +52,10 @@ const handleRefreshToken = async (req, res) => {
 
       //  the token has expired
       if (error) {
-        console.log('expired refresh token');
+        console.log('detected expired refresh token');
         foundUser.refreshToken = [...newRefreshTokenArray];
         const result = await foundUser.save();
-        console.log(result);
       }
-      console.log('5');
       if (error || foundUser.username !== decoded.username)
         return res.sendStatus(403);
 
@@ -84,7 +81,6 @@ const handleRefreshToken = async (req, res) => {
       );
       foundUser.refreshToken = [...newRefreshTokenArray, newRefreshToken];
       const result = await foundUser.save();
-      console.log(result);
       res.cookie('jwt', newRefreshToken, {
         httpOnly: true,
         sameSite: 'None',

@@ -13,6 +13,10 @@ router.get('/:id', postController.getPost);
 
 router.put('/:id', verifyJWT, postController.updatePost);
 
+router.put('/:id/like', verifyJWT, postController.likePost);
+
+router.put('/:id/comment', verifyJWT, postController.commentPost);
+
 router.delete('/:id', postController.deletePost);
 
 module.exports = router;
