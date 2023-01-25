@@ -3,10 +3,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { logout } from '../api/postApi';
 import useAuth from '../hooks/useAuth';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import useInput from '../hooks/useInput';
+import useLogout from '../hooks/useLogout';
 
 const CREATE_POST_URL = '/post';
 
@@ -14,6 +14,7 @@ export default function NewPost() {
   const { auth, setAuth } = useAuth();
   const navigate = useNavigate();
   const axiosPrivate = useAxiosPrivate();
+  const logout = useLogout();
 
   const location = useLocation();
   const from = location.state?.from?.pathname || '/';

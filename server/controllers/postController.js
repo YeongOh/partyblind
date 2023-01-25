@@ -44,11 +44,7 @@ const updatePost = async (req, res) => {
 
   const username = post.username;
 
-  console.log(`requested creater: ${req?.body?.username}`);
-  console.log(`post creater: ${username}`);
-
   if (req?.body?.username !== username) {
-    console.log(!req?.body?.username !== username);
     return res.status(401).json({ message: 'Username does not match.' });
   }
 
@@ -149,9 +145,6 @@ const commentPost = async (req, res) => {
   post.comments.push(newComment);
   const result = await post.save();
 
-  console.log(result);
-  console.log(newComment);
-
   if (post) {
     return res.status(200).json(newComment);
   }
@@ -186,6 +179,52 @@ const deleteComment = async (req, res) => {
   const result = await post.save();
 
   return res.sendStatus(200);
+};
+
+const updateComment = async (req, res) => {
+  if (!req?.params?.id)
+    return res.status(401).json({ message: 'Invalid attempt' });
+
+  if (!req?.body?.updateText)
+    return res.status(401).json({ message: 'Invalid attempt' });
+
+  if (req.body.updateText.length > 100)
+    return res
+      .status(400)
+      .json({ message: 'Please comment less than 100 words!' });
+
+  const postId = req.params.id;
+  const commentId = req.params.commentId;
+  const updateText = req.body.updateText;
+
+  const post = await Post.findOne({ id: postId }).exec();
+
+  const comment = post.comments.find((item) => item._id === commentId);
+
+  if (!verifyUsername(req, res, comment.commentUsername))
+    return res.status(401).json({ message: 'user verification failed' });
+
+  const commentEdited = {
+    ...comment,
+    commentText: updateText,
+    isEdited: true,
+  };
+
+  if (!post.comments) {
+    post.comments = [];
+  }
+
+  const newCommentArray = post.comments.filter(
+    (item) => item._id !== commentId
+  );
+
+  post.comments = [...newCommentArray, commentEdited];
+  const result = await post.save();
+
+  if (post) {
+    return res.sendStatus(200);
+  }
+  return res.status(404).json({ message: `Post ${id} not found` });
 };
 
 const verifyUsername = (req, res, username) => {
@@ -224,4 +263,5 @@ module.exports = {
   likePost,
   commentPost,
   deleteComment,
+  updateComment,
 };

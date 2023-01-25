@@ -36,7 +36,7 @@ export default function Posts() {
         <h1 className='text-red-500 text-xl font-semibold mb-8 text-center'>{`${error}`}</h1>
       )}
       {isLoading && !error && (
-        <h1 className='text-gray-800 text-xl font-semibold mb-8 text-center'>
+        <h1 className='text-gray-800 text-xl mb-8 text-center'>
           Loading Posts...
         </h1>
       )}

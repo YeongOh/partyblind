@@ -27,17 +27,6 @@ export async function login(username, password) {
   return response;
 }
 
-export async function logout() {
-  const res = await fetch('http://localhost:4000/auth/logout', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    credentials: 'include', // to use Cookies
-  });
-  return res;
-}
-
 export async function createPost(title, text, username) {
   const post = await fetch('http://localhost:4000/post', {
     method: 'POST',

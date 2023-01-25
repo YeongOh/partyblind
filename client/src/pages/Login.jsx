@@ -1,6 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-// import { useAuthContext } from '../context/AuthContext';
 import axios from '../api/axios';
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -17,7 +16,7 @@ export default function Login() {
 
   const userRef = useRef();
 
-  const [username, usernameAttributes] = useInput('login_username', ''); // useState();
+  const [username, usernameAttributes] = useInput('login_username', '');
   const [password, setPassword] = useState();
   const [error, setError] = useState('');
 
@@ -25,7 +24,6 @@ export default function Login() {
     userRef.current.focus();
 
     if (!localStorage.getItem('login_trust')) setPersist(true);
-    // eslint-disable-next-line
   }, []);
 
   useEffect(() => {
@@ -36,7 +34,6 @@ export default function Login() {
     if (auth?.accessToken) {
       navigate(from, { replace: true });
     }
-    // eslint-disable-next-line
   }, [auth]);
 
   const togglePersist = () => {
@@ -60,7 +57,6 @@ export default function Login() {
         }
       );
       const accessToken = response?.data?.accessToken;
-      // const roles = response?.data?.roles;
       setPassword('');
       setAuth({ username, accessToken });
     } catch (error) {
@@ -78,8 +74,6 @@ export default function Login() {
 
   return (
     <>
-      {/* {auth && <Navigate to='/' replace/>} */}
-
       <section className='w-60 mx-auto mt-20'>
         <form onSubmit={handleSubmit}>
           {error && (

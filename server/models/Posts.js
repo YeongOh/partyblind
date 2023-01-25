@@ -27,9 +27,11 @@ const postSchema = new Schema({
     {
       commentUsername: {
         type: String,
+        required: true,
       },
       commentText: {
         type: String,
+        required: true,
       },
       commentTime: {
         type: Number,

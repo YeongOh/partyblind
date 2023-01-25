@@ -16,6 +16,13 @@ export const axiosPrivate = axios.create({
   withCredentials: true,
 });
 
+/**
+ * Returns x raised to the n-th power.
+ *
+ * @param {number} x The number to raise.
+ * @param {number} n The power, must be a natural number.
+ * @return {number} x raised to the n-th power.
+ */
 export async function getPosts() {
   try {
     const response = await axios.get(BASE_URL + '/post');

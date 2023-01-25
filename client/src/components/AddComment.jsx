@@ -1,14 +1,15 @@
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useEffect, useState } from 'react';
-import { axiosPrivate } from '../api/axios';
 import useAuth from '../hooks/useAuth';
+import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
 export default function AddComment({ postId, onAdd }) {
   const [commentInput, setCommentInput] = useState('');
   const [focus, setFocus] = useState(false);
   const { auth } = useAuth();
   const [error, setError] = useState('');
+  const axiosPrivate = useAxiosPrivate();
 
   useEffect(() => setError(''), [commentInput]);
 
@@ -16,7 +17,7 @@ export default function AddComment({ postId, onAdd }) {
     e.preventDefault();
     const username = auth?.username;
     try {
-      const response = await axiosPrivate.put(
+      const response = await axiosPrivate.post(
         '/post/' + postId + '/comment', //
         JSON.stringify({ text: commentInput, username }),
         {
@@ -33,7 +34,7 @@ export default function AddComment({ postId, onAdd }) {
         setError('No Server Response');
       } else if (error.response?.status === 400) {
         setError('Please comment less than 100 words!');
-      } else if (error.response?.status === 403) {
+      } else if (error.response?.status === 401) {
         setError('Please login to comment!');
       } else {
         setError(`Comment failed: ${error.message}`);
@@ -61,16 +62,16 @@ export default function AddComment({ postId, onAdd }) {
           className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-gray-800'
         />
         {focus && (
-          <div>
-            <button className='float-right w-24 bg-red-500 hover:bg-red-600 text-white text-xs font-semibold py-2 px-4 border rounded shadow mt-2 ml-4'>
-              COMMENT
-            </button>
+          <div className='mt-3 mb-6 flex justify-end w-full'>
             <button
               onClick={() => setCommentInput('')}
               type='button'
-              className='float-right w-24 hover:bg-gray-200 text-gray-700 text-xs font-semibold py-2 px-4 mt-2'
+              className='p-3 hover:bg-gray-300 rounded-full font-semibold text-md'
             >
-              CANCEL
+              Cancel
+            </button>
+            <button className='py-3 px-5 bg-gray-300 rounded-full hover:bg-red-500 hover:text-white font-semibold ml-4'>
+              Comment
             </button>
           </div>
         )}

@@ -11,6 +11,7 @@ export default function Post({ post }) {
 
   // showText ? show text : show only title
   const handleClick = () => {
+    // navigate(`/post/${id}`, { state: { post } });
     navigate(`/post/${id}`, { state: { post } });
   };
 
@@ -35,7 +36,13 @@ export default function Post({ post }) {
             </span>
           )}
         </div>
-        <ReactTimeAgo className='opacity-80' date={createdAt} locale='en-US' />
+        {Number.isInteger(createdAt) && (
+          <ReactTimeAgo
+            className='opacity-80'
+            date={createdAt}
+            locale='en-US'
+          />
+        )}
       </div>
     </li>
   );

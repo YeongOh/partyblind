@@ -19,8 +19,6 @@ import { AuthContextProvider } from './context/AuthContext';
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
-import { getPost } from './api/axios';
-// import { ReactQueryDevtools } from 'react-query/devtools';
 
 TimeAgo.addDefaultLocale(en);
 TimeAgo.addLocale(en);
@@ -43,11 +41,7 @@ const router = createBrowserRouter([
       {
         path: 'post/:paramId',
         element: <PostDetail />,
-        // loader: async ({ params }) => {
-        //   return getPost(params.paramId);
-        // },
       },
-      // Need auth to write a post
       {
         path: 'post/write',
         element: (
