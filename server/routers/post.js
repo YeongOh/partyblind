@@ -17,6 +17,8 @@ router.put('/:id/like', verifyJWT, postController.likePost);
 
 router.put('/:id/comment', verifyJWT, postController.commentPost);
 
+router.delete('/:id/comment/:commentId', postController.deleteComment);
+
 router.delete('/:id', postController.deletePost);
 
 module.exports = router;

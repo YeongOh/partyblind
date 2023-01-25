@@ -28,6 +28,8 @@ export default function Posts() {
     fetchPosts();
   }, []);
 
+  const postItems = posts.map((post) => <Post key={post.id} post={post} />);
+
   return (
     <section className='max-w-8xl mt-12 mx-auto sm:w-full md:w-4/5 lg:w-3/4 xl:w-2/3'>
       {error && (
@@ -38,9 +40,7 @@ export default function Posts() {
           Loading Posts...
         </h1>
       )}
-      <ul className='grid sm:grid-cols-1 md:grid-cols-2 gap-2'>
-        {posts && posts.map((post) => <Post key={post.id} post={post} />)}
-      </ul>
+      <ul className='grid sm:grid-cols-1 md:grid-cols-2 gap-2'>{postItems}</ul>
     </section>
   );
 }

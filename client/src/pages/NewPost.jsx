@@ -69,7 +69,7 @@ export default function NewPost() {
   };
 
   return (
-    <section className='w-1/2 mx-auto mt-12 relative'>
+    <section className='mx-auto mt-12 relative sm:w-full md:w-2/3 lg:w-3/5 xl:w-1/2'>
       {error ? (
         <p className='text-red-500 text-lg font-semibold mb-8 text-center'>
           <FontAwesomeIcon icon={faInfoCircle} /> {error}

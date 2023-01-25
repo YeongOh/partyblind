@@ -35,6 +35,12 @@ const postSchema = new Schema({
         type: Number,
         required: true,
       },
+      isEdited: {
+        type: Boolean,
+      },
+      _id: {
+        type: String,
+      },
     },
   ],
   numberOfLikes: {

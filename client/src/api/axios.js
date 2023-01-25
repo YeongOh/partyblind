@@ -28,6 +28,18 @@ export async function getPosts() {
   }
 }
 
+export async function getPost(id) {
+  try {
+    const response = await axios.get(BASE_URL + '/post/' + id);
+    return response.data;
+  } catch (error) {
+    if (!error?.response) {
+      throw new Error('No Server Response');
+    }
+    throw new Error(`Fetching failed: ${error.message}`);
+  }
+}
+
 export async function createPost(title, text, username) {
   try {
     const response = await axiosPrivate.post(

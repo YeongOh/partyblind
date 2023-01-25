@@ -63,7 +63,8 @@ const login = async (req, res) => {
       if (!foundToken) {
         console.log('attempted refresh token reuse at login');
         // Clear out all previous refresh tokens
-        newRefreshTokenArray = [];
+        // Assignment to constant variable Error
+        // newRefreshTokenArray = [];
       }
     }
 

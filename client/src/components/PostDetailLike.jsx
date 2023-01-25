@@ -16,7 +16,7 @@ export default function PostDetailLike({ postId, numberOfLikes }) {
     setTimeout(() => setErrorVisible(false), 5 * 1000);
   }, [error]);
 
-  const handleLike = async (e) => {
+  const handleClick = async (e) => {
     e.preventDefault();
     const username = auth?.username;
     try {
@@ -44,7 +44,7 @@ export default function PostDetailLike({ postId, numberOfLikes }) {
   return (
     <div className='text-center mt-20'>
       <button
-        onClick={handleLike}
+        onClick={handleClick}
         className='bg-white hover:bg-gray-100 text-red-500 font-semibold text-s py-2 w-24 border border-gray-400 rounded shadow'
       >
         <FontAwesomeIcon icon={faThumbsUp} className='ml-r' /> {likes || 0}

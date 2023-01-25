@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate, useLoaderData } from 'react-router-dom';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 import ReactTimeAgo from 'react-time-ago';
 
@@ -15,10 +15,12 @@ const DELETE_URL = '/post/';
 export default function PostDetail() {
   // null check - if the user refreshes a page, or directly writes a link
   const { state } = useLocation();
+  // const secondPost = useLoaderData();
   const { post } = state || {};
+  // console.log(secondPost);
 
   const { id, title, username, createdAt, text, numberOfLikes, comments } =
-    post || {};
+    post;
 
   const [isEditing, setIsEditing] = useState(false);
   const navigate = useNavigate();
@@ -70,7 +72,6 @@ export default function PostDetail() {
     const title = newPost.title;
     const text = newPost.text;
     const username = auth?.username;
-    console.log(auth);
 
     try {
       const response = await axiosPrivate.put(
@@ -143,14 +144,14 @@ export default function PostDetail() {
           </section>
           <PostDetailComment
             postUsername={username}
-            comments={comments}
+            postComments={comments}
             postId={id}
           />
         </>
       )}
 
       {isEditing && (
-        <section className='relative w-1/2 mx-auto mt-12 p-2 text-gray-700'>
+        <section className='relative mx-auto mt-12 p-2 text-gray-700 sm:w-full md:w-2/3 lg:w-3/5 xl:w-1/2'>
           <h1 className='font-semibold text-lg mb-8 text-center'>
             Editing your post...
           </h1>

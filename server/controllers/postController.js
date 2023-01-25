@@ -69,25 +69,7 @@ const deletePost = async (req, res) => {
   const id = req.params.id;
 
   const post = await Post.findOne({ id }).exec();
-
-  const authHeader = req.headers.authorization || req.headers.Authorization;
-  if (!authHeader?.startsWith('Bearer ')) {
-    console.log('JWT error 401');
-    return res.status(401).json({ message: 'Incorrect authorizaiton header.' });
-  }
-
-  const token = authHeader.split(' ')[1];
-  let match = false;
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
-    if (error) {
-      console.log('expired access token, need a new token.');
-      return res.sendStatus(403); // invalid token
-    }
-    match = post.username === decoded.UserInfo.username;
-  });
-  if (!match)
-    return res.status(401).json({ message: 'username does not match.' });
+  verifyUsername(req, res, post.username);
 
   const result = await Post.deleteOne({ id });
   res.sendStatus(204);
@@ -150,23 +132,87 @@ const commentPost = async (req, res) => {
   const text = req.body.text;
   const commentTime = new Date().getTime();
 
+  const commentId = uuid.v4();
+
   const newComment = {
     commentUsername: username,
     commentText: text,
     commentTime,
+    _id: commentId,
   };
 
   if (!post.comments) {
     post.comments = [];
   }
 
+  // post.comments.unshift(newComment);
   post.comments.push(newComment);
   const result = await post.save();
+
+  console.log(result);
+  console.log(newComment);
 
   if (post) {
     return res.status(200).json(newComment);
   }
   return res.status(404).json({ message: `Post ${id} not found` });
+};
+
+const deleteComment = async (req, res) => {
+  if (!req?.params?.id || !req?.params?.commentId) {
+    return res.status(400).json({ message: 'Invalid attempt' });
+  }
+  const postId = req.params.id;
+  const commentId = req.params.commentId;
+
+  const post = await Post.findOne({ id: postId }).exec();
+  if (!post) {
+    console.log('cant find the post');
+    return res.status(400).json({ message: 'Invalid attempt' });
+  }
+
+  const deleted = post.comments.find((item) => item._id === commentId);
+
+  // if (!deleted) {
+  //   console.log('cant find the comment');
+  //   return res.status(400).json({ message: 'comment does not exist' });
+  // }
+  if (!verifyUsername(req, res, deleted.commentUsername))
+    return res.status(401).json({ message: 'user verification failed' });
+
+  const newComments = post.comments.filter((item) => item._id !== commentId);
+  post.comments = newComments;
+
+  const result = await post.save();
+
+  return res.sendStatus(200);
+};
+
+const verifyUsername = (req, res, username) => {
+  const authHeader = req.headers.authorization || req.headers.Authorization;
+  if (!authHeader?.startsWith('Bearer ')) {
+    console.log('JWT error 401');
+    return false;
+    // return res.status(401).json({ message: 'Incorrect authorizaiton header.' });
+  }
+
+  const token = authHeader.split(' ')[1];
+  let match = false;
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (error, decoded) => {
+    if (error) {
+      console.log('expired access token, need a new token.');
+      return false;
+      // return res.sendStatus(403); // invalid token
+    }
+    match = username === decoded.UserInfo.username;
+  });
+  if (!match) {
+    console.log('username does not match');
+    return false;
+    // return res.status(401).json({ message: 'username does not match.' });
+  }
+  return true;
 };
 
 module.exports = {
@@ -177,4 +223,5 @@ module.exports = {
   getPost,
   likePost,
   commentPost,
+  deleteComment,
 };

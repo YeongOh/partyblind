@@ -19,6 +19,7 @@ import { AuthContextProvider } from './context/AuthContext';
 import { disableReactDevTools } from '@fvilers/disable-react-devtools';
 
 import { QueryClient, QueryClientProvider } from 'react-query';
+import { getPost } from './api/axios';
 // import { ReactQueryDevtools } from 'react-query/devtools';
 
 TimeAgo.addDefaultLocale(en);
@@ -36,16 +37,19 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       {
-        path: '/post',
+        path: 'post',
         element: <AllPosts />,
       },
       {
-        path: '/post/:paramId',
+        path: 'post/:paramId',
         element: <PostDetail />,
+        // loader: async ({ params }) => {
+        //   return getPost(params.paramId);
+        // },
       },
       // Need auth to write a post
       {
-        path: '/post/write',
+        path: 'post/write',
         element: (
           <ProtectedRoute>
             <NewPost />
@@ -54,11 +58,11 @@ const router = createBrowserRouter([
       },
       // can't sign up or logged in when authed
       {
-        path: '/signup',
+        path: 'signup',
         element: <SignUp />,
       },
       {
-        path: '/login',
+        path: 'login',
         element: <Login />,
       },
       {

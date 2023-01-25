@@ -109,14 +109,12 @@ export default function SignUp() {
     <>
       {success ? (
         <section className='w-96 mx-auto'>
-          <h1 className='font-semibold text-xl mb-10 mt-10'>
-            Welcome to PartyBlind, {username}!
-          </h1>
+          <h1 className='font-semibold'>Welcome to PartyBlind, {username}!</h1>
         </section>
       ) : (
         <section className='w-60 mx-auto'>
           <form onSubmit={handleSubmit}>
-            <h1 className='font-semibold text-xl mb-10 mt-10'>
+            <h1 className='font-semibold md:text-xl md:my-10 sm:my-10 text-center'>
               Create your new account!
             </h1>
             {error && (
