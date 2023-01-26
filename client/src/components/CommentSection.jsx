@@ -30,9 +30,9 @@ export default function PostDetailComment({
   };
 
   return (
-    <section className='relative mx-auto p-2 text-gray-700 mt-20 sm:w-full md:w-2/3 lg:w-3/5 xl:w-1/2'>
+    <section className='relative mx-auto p-2 text-gray-700 m-12 sm:w-full md:w-2/3 lg:w-3/5 xl:w-1/2'>
       <AddComment onAdd={handleAdd} postId={postId} />
-      <ul className='mt-6'>
+      <ul className='mt-10'>
         {comments?.length === 0 && (
           <span className='font-semibold ml-2'>
             Be the first one to comment!

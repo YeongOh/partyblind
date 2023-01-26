@@ -5,8 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import ReactTimeAgo from 'react-time-ago';
 
 export default function Post({ post }) {
-  const { id, title, username, createdAt, text, numberOfLikes, comments } =
-    post;
+  const { id, title, username, createdAt, numberOfLikes, comments } = post;
   const navigate = useNavigate();
 
   // showText ? show text : show only title
@@ -18,29 +17,29 @@ export default function Post({ post }) {
   return (
     <li
       onClick={handleClick}
-      className='cursor-pointer border relative flex flex-col justify-between h-60 p-5 min-w-0'
+      className='cursor-pointer hover:bg-gray-100 relative flex justify-between p-3'
     >
-      <h1 className='text-xl text-gray-800 truncate'>{title}</h1>
-      <span className='text-sm text-gray-800 truncate opacity-70'>{text}</span>
-      <div className='flex justify-between items-center text-sm text-gray-500'>
-        <div className='font-semibold'>
-          <span>{username}</span>
-          {numberOfLikes > 0 && (
-            <span className='ml-2 text-red-500'>
-              <FontAwesomeIcon icon={faThumbsUp} /> {numberOfLikes}
-            </span>
-          )}
-          {comments.length !== 0 && (
-            <span className='ml-2 text-gray-600'>
-              <FontAwesomeIcon icon={faComment} /> {comments.length}
-            </span>
-          )}
-        </div>
+      <div>
+        <span className='text-md truncate mr-4'>{title}</span>
+        {comments.length !== 0 && (
+          <span className='text-gray-600'>
+            <FontAwesomeIcon icon={faComment} /> {comments.length}
+          </span>
+        )}
+        {numberOfLikes > 0 && (
+          <span className='ml-2 text-red-500'>
+            <FontAwesomeIcon icon={faThumbsUp} /> {numberOfLikes}
+          </span>
+        )}
+      </div>
+      <div>
+        <span className='font-semibold'>{username}</span>
         {Number.isInteger(createdAt) && (
           <ReactTimeAgo
-            className='opacity-80'
+            className='mx-2'
             date={createdAt}
             locale='en-US'
+            timeStyle='twitter'
           />
         )}
       </div>

@@ -31,7 +31,7 @@ export default function Posts() {
   const postItems = posts.map((post) => <Post key={post.id} post={post} />);
 
   return (
-    <section className='max-w-8xl mt-12 mx-auto sm:w-full md:w-4/5 lg:w-3/4 xl:w-2/3'>
+    <section className='max-w-8xl mt-12 mx-auto sm:w-full md:w-4/5 lg:w-3/5 xl:w-2/5'>
       {error && (
         <h1 className='text-red-500 text-xl font-semibold mb-8 text-center'>{`${error}`}</h1>
       )}
@@ -40,7 +40,9 @@ export default function Posts() {
           Loading Posts...
         </h1>
       )}
-      <ul className='grid sm:grid-cols-1 md:grid-cols-2 gap-2'>{postItems}</ul>
+      <ul className='divide-y border-l-2 border-r-2 border-t-2 border-b-2'>
+        {postItems}
+      </ul>
     </section>
   );
 }

@@ -2,7 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useAxiosPrivate from '../hooks/useAxiosPrivate';
 
-import { faArrowLeft, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowLeft,
+  faEdit,
+  faInfoCircle,
+  faTrash,
+  faTrashAlt,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import useAuth from '../hooks/useAuth';
 import PostDetailLike from '../components/PostDetailLike';
@@ -78,44 +84,53 @@ export default function PostDetail() {
       {!isLoading && !isEditing && (
         <>
           <section className='relative mx-auto mt-12 p-2 text-gray-700 sm:w-full md:w-2/3 lg:w-3/5 xl:w-1/2'>
-            <h1 className='text-2xl my-5 whitespace-pre-wrap truncate'>
+            <h1 className='text-3xl font-bold my-5 whitespace-pre-wrap truncate'>
               {post.title}
             </h1>
-            <div className='border-b p-2 flex justify-between items-center text-md text-gray-500'>
+            <div className='border-b p-4 flex justify-between items-center text-lg text-gray-500'>
               <span className='font-semibold'>{post.username}</span>
 
               {Number.isInteger(post?.createdAt) && (
                 <ReactTimeAgo date={post.createdAt} locale='en-US' />
               )}
             </div>
-            <p className='my-12 whitespace-pre-wrap truncate'>{post.text}</p>
-            <PostDetailLike postId={id} numberOfLikes={post.numberOfLikes} />
+            <p className='my-12 whitespace-pre-wrap truncate text-xl h-96'>
+              {post.text}
+            </p>
+
             {error && (
               <p className='text-red-500 text-lg font-semibold mt-8 text-center'>
                 <FontAwesomeIcon icon={faInfoCircle} /> {error}
               </p>
             )}
-            <div className='border-b mt-20'>
-              <button
-                type='button'
-                className='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 border border-gray-400 rounded shadow w-24 text-xs absolute mt-4'
-                onClick={() => navigate('/')}
-              >
-                <FontAwesomeIcon icon={faArrowLeft} />
-              </button>
+            <div className='flex justify-between items-center border-t pt-10'>
+              <div>
+                <button
+                  type='button'
+                  className='p-3 hover:bg-gray-300 rounded-full font-semibold text-md w-24 text-2xl'
+                  onClick={() => navigate('/')}
+                >
+                  <FontAwesomeIcon icon={faArrowLeft} />
+                </button>
+                <PostDetailLike
+                  postId={id}
+                  numberOfLikes={post.numberOfLikes}
+                  likedUsernames={post.likedUsernames}
+                />
+              </div>
               {auth?.username === post.username && (
-                <div className='absolute right-2 mt-4'>
+                <div>
                   <button
-                    className='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 border border-gray-400 rounded shadow w-24 text-xs'
+                    className='p-3 hover:bg-gray-300 rounded-full font-semibold text-md w-24 text-2xl mr-2'
                     onClick={() => setIsEditing(true)}
                   >
-                    EDIT
+                    <FontAwesomeIcon icon={faEdit} />
                   </button>
                   <button
                     onClick={handleDelete}
-                    className='ml-4 bg-gray-200 hover:bg-red-400 hover:text-white text-gray-800 font-semibold py-2 w-24 border border-gray-400 rounded shadow text-xs'
+                    className='p-3 hover:bg-gray-300 rounded-full font-semibold text-md w-24 text-2xl'
                   >
-                    DELETE
+                    <FontAwesomeIcon icon={faTrashAlt} />
                   </button>
                 </div>
               )}

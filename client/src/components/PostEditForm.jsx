@@ -1,4 +1,8 @@
-import { faArrowLeft, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import {
+  faArrowLeft,
+  faEdit,
+  faInfoCircle,
+} from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -46,13 +50,13 @@ export default function PostEditForm({ post, onCancel }) {
           <FontAwesomeIcon icon={faInfoCircle} /> {error}
         </p>
       ) : (
-        <h1 className='font-semibold text-lg mb-8 text-center'>
-          Editing your post...
+        <h1 className='font-semibold mb-8 text-center text-3xl'>
+          Editing your post!
         </h1>
       )}
       <form onSubmit={handleSubmit}>
         <label
-          className='block text-gray-700 text-m font-semibold mb-2 ml-2'
+          className='block text-gray-700 text-xl font-semibold mb-2 ml-2'
           htmlFor='title'
         >
           Title
@@ -65,10 +69,10 @@ export default function PostEditForm({ post, onCancel }) {
           autoComplete='off'
           onChange={(e) => setTitle(e.target.value)}
           required
-          className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-gray-800'
+          className='text-2xl font-bold shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-gray-800'
         />
         <label
-          className='block text-gray-700 text-m font-semibold my-2 ml-2'
+          className='block text-gray-700 text-xl font-semibold my-2 ml-2'
           htmlFor='text'
         >
           Description
@@ -81,27 +85,29 @@ export default function PostEditForm({ post, onCancel }) {
           autoComplete='off'
           onChange={(e) => setText(e.target.value)}
           required
-          className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-gray-800 h-56'
+          className='text-xl shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline focus:border-gray-800 h-96'
         />
-        <button
-          type='button'
-          onClick={() => {
-            const confirmCancel = window.confirm(
-              'Do you really want to cancel?'
-            );
-            if (!confirmCancel) {
-              return;
-            }
-            onCancel();
-            // setError('');
-          }}
-          className='bg-white hover:bg-gray-100 text-gray-800 font-semibold py-2 w-full mt-4 border border-gray-400 rounded shadow w-20'
-        >
-          <FontAwesomeIcon icon={faArrowLeft} />
-        </button>
-        <button className='w-24 bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 border rounded shadow right-2 absolute mt-4'>
-          EDIT
-        </button>
+        <div className='flex items-center justify-between mt-4'>
+          <button
+            type='button'
+            onClick={() => {
+              const confirmCancel = window.confirm(
+                'Do you really want to cancel?'
+              );
+              if (!confirmCancel) {
+                return;
+              }
+              onCancel();
+              // setError('');
+            }}
+            className='p-3 bg-gray-300 rounded-full font-semibold text-md w-24 text-2xl'
+          >
+            <FontAwesomeIcon icon={faArrowLeft} />
+          </button>
+          <button className='p-3 hover:text-white hover:bg-red-500 bg-gray-300 rounded-full font-semibold text-md w-24 text-2xl'>
+            <FontAwesomeIcon icon={faEdit} />
+          </button>
+        </div>
       </form>
     </section>
   );

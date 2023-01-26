@@ -4,13 +4,26 @@ import React, { useEffect, useState } from 'react';
 import { axiosPrivate } from '../api/axios';
 import useAuth from '../hooks/useAuth';
 
-export default function PostDetailLike({ postId, numberOfLikes }) {
+export default function PostDetailLike({
+  postId,
+  numberOfLikes,
+  likedUsernames,
+}) {
   const [likes, setLikes] = useState(numberOfLikes);
   const [error, setError] = useState('');
   const [errorVisible, setErrorVisible] = useState(true);
   const { auth } = useAuth();
+  const [alreadyLiked, setAlreadyLiked] = useState(
+    likedUsernames
+      ? likedUsernames.find((username) => username === auth?.username)
+      : ''
+  );
 
-  // TODO: a user cannot like his own post
+  // when a page is refreshed, alreadyLiked is false due to auth context being a bit slow
+
+  const alreadyLikedClass = alreadyLiked
+    ? 'bg-red-500 text-white'
+    : 'bg-gray-300 text-gray-700';
 
   useEffect(() => {
     setTimeout(() => setErrorVisible(false), 5 * 1000);
@@ -30,6 +43,7 @@ export default function PostDetailLike({ postId, numberOfLikes }) {
         }
       );
       setLikes(response.data);
+      setAlreadyLiked(username);
     } catch (error) {
       if (!error?.response) {
         setError('No Server Response');
@@ -42,18 +56,18 @@ export default function PostDetailLike({ postId, numberOfLikes }) {
   };
 
   return (
-    <div className='text-center mt-20'>
+    <>
+      {error && errorVisible && (
+        <span className='text-red-500 text-md font-semibold left-10 bottom-20 absolute'>
+          <FontAwesomeIcon icon={faInfoCircle} /> {error}
+        </span>
+      )}
       <button
         onClick={handleClick}
-        className='bg-white hover:bg-gray-100 text-red-500 font-semibold text-s py-2 w-24 border border-gray-400 rounded shadow'
+        className={`p-3 hover:bg-red-500 hover:text-white rounded-full font-semibold w-24 text-2xl mx-2 ${alreadyLikedClass}`}
       >
-        <FontAwesomeIcon icon={faThumbsUp} className='ml-r' /> {likes || 0}
+        <FontAwesomeIcon icon={faThumbsUp} /> {likes || 0}
       </button>
-      {error && errorVisible && (
-        <p className='text-red-500 text-md font-semibold mt-2'>
-          <FontAwesomeIcon icon={faInfoCircle} /> {error}
-        </p>
-      )}
-    </div>
+    </>
   );
 }

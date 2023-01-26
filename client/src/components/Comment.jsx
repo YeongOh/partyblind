@@ -1,6 +1,8 @@
 import {
   faInfoCircle,
   faPencil,
+  faRemove,
+  faTrash,
   faTrashAlt,
 } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -49,7 +51,7 @@ export default function Comment({
       } else if (error.response?.status === 400) {
         setError('Please use less than 100 words!');
       } else if (error.response?.status === 401) {
-        setError('Please login to comment!');
+        setError('Authentication failed. Please try again or Refresh!');
       } else {
         setError(`Comment failed: ${error.message}`);
       }
@@ -84,7 +86,7 @@ export default function Comment({
       onDelete(comment);
     } catch (error) {
       if (error?.response?.status === 401) {
-        setError('User authentication failed.');
+        setError('Authentication failed. Please try again or Refresh!');
       } else {
         setError('An unexpected error occured!');
       }
@@ -93,34 +95,38 @@ export default function Comment({
 
   return (
     <li key={comment._id} className='my-4 ml-1'>
-      <div className='text-sm text-gray-500 mb-1'>
-        <span className='font-semibold'>{comment.commentUsername}</span>
-        {comment.commentUsername === postUsername && (
-          <span className='font-semibold text-blue-400 ml-2'>OP</span>
-        )}
-        {Number.isInteger(comment.commentTime) && (
-          <ReactTimeAgo
-            className='ml-3'
-            date={comment.commentTime}
-            locale='en-US'
-            timeStyle='twitter'
-          />
-        )}
-        {isSameUser && !isEditing && (
-          <>
-            <FontAwesomeIcon
-              onClick={toggleEdit}
-              icon={faPencil}
-              className='cursor-pointer mx-1 hover:text-red-500'
+      <div className='text-md text-gray-500 mb-1 flex items-center justify-between'>
+        <div>
+          <span className='font-semibold'>{comment.commentUsername}</span>
+          {comment.commentUsername === postUsername && (
+            <span className='font-semibold text-blue-400 ml-2'>OP</span>
+          )}
+          {Number.isInteger(comment.commentTime) && (
+            <ReactTimeAgo
+              className='ml-3'
+              date={comment.commentTime}
+              locale='en-US'
+              timeStyle='twitter'
             />
-            <FontAwesomeIcon
-              onClick={handleDelete}
-              icon={faTrashAlt}
-              className='cursor-pointer mx-2 hover:text-red-500'
-            />
-          </>
-        )}
-        {comment.isEdited && <span> (edited)</span>}
+          )}
+          {comment.isEdited && <span> (edited)</span>}
+        </div>
+        <div>
+          {isSameUser && !isEditing && (
+            <>
+              <FontAwesomeIcon
+                onClick={toggleEdit}
+                icon={faPencil}
+                className='cursor-pointer mx-1 hover:text-red-500 text-xl'
+              />
+              <FontAwesomeIcon
+                onClick={handleDelete}
+                icon={faTrash}
+                className='cursor-pointer mx-6 hover:text-red-500 text-xl'
+              />
+            </>
+          )}
+        </div>
       </div>
       {!isEditing ? (
         <span className='whitespace-pre-wrap truncate'>
